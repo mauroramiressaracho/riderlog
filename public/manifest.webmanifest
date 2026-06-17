@@ -1,0 +1,21 @@
+{
+  "name": "RiderLog",
+  "short_name": "RiderLog",
+  "description": "Seu diário de bordo na estrada.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "categories": ["travel", "lifestyle", "utilities"],
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "./icons/riderlog-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
