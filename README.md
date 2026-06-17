@@ -76,7 +76,7 @@ Depois do primeiro acesso online, o service worker permite abrir o app novamente
 
 O projeto já está preparado para GitHub Pages:
 
-- `vite.config.ts` usa `base: './'`, permitindo publicar em subpasta como `https://usuario.github.io/repositorio/`.
+- `vite.config.ts` usa `base: '/riderlog/'`, correto para `https://mauroramiressaracho.github.io/riderlog/`.
 - A navegação do app não depende de rotas de URL, então recarregar a página não quebra as telas.
 - `.github/workflows/deploy.yml` publica o conteúdo de `dist` usando GitHub Actions.
 - `public/.nojekyll` evita processamento pelo Jekyll no GitHub Pages.

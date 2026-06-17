@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { App } from './app/App';
 import './styles/index.css';
 
-const PWA_CACHE_NAME = 'riderlog-v2';
+const PWA_CACHE_NAME = 'riderlog-v3';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

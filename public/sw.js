@@ -1,4 +1,4 @@
-const CACHE_NAME = 'riderlog-v2';
+const CACHE_NAME = 'riderlog-v3';
 const APP_SHELL = ['./', './manifest.json', './manifest.webmanifest', './icons/riderlog-icon.svg'];
 
 self.addEventListener('install', (event) => {
@@ -30,10 +30,6 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith(
     caches.match(event.request).then(async (cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-
       try {
         const networkResponse = await fetch(event.request);
 
@@ -44,6 +40,10 @@ self.addEventListener('fetch', (event) => {
 
         return networkResponse;
       } catch {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
         if (event.request.mode === 'navigate') {
           return caches.match('./');
         }
