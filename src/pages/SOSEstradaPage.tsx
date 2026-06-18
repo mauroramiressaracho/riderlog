@@ -1,4 +1,18 @@
 import { useEffect, useState } from 'react';
+import {
+  CircleDot,
+  CreditCard,
+  Fuel,
+  Hotel,
+  Hospital,
+  Landmark,
+  MapPin,
+  Pill,
+  ShieldAlert,
+  Utensils,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
 
 type Coordinates = {
@@ -8,22 +22,22 @@ type Coordinates = {
 
 type SOSAction = {
   label: string;
-  icon: string;
+  icon: LucideIcon;
   query: string;
   tone?: 'danger' | 'default';
 };
 
 const sosActions: SOSAction[] = [
-  { label: 'Restaurante perto de mim', icon: '🍽️', query: 'restaurante perto de mim' },
-  { label: 'Hotel perto de mim', icon: '🛏️', query: 'hotel perto de mim' },
-  { label: 'Posto de gasolina perto de mim', icon: '⛽', query: 'posto de gasolina perto de mim' },
-  { label: 'Borracharia perto de mim', icon: '🛞', query: 'borracharia perto de mim' },
-  { label: 'Oficina de moto perto de mim', icon: '🧰', query: 'oficina de moto perto de mim' },
-  { label: 'Farmácia perto de mim', icon: '💊', query: 'farmácia perto de mim' },
-  { label: 'Hospital perto de mim', icon: '🏥', query: 'hospital perto de mim', tone: 'danger' },
-  { label: 'Polícia rodoviária perto de mim', icon: '🚓', query: 'polícia rodoviária perto de mim', tone: 'danger' },
-  { label: 'Caixa eletrônico perto de mim', icon: '🏧', query: 'caixa eletrônico perto de mim' },
-  { label: 'Ponto turístico perto de mim', icon: '📍', query: 'ponto turístico perto de mim' },
+  { label: 'Restaurante perto de mim', icon: Utensils, query: 'restaurante perto de mim' },
+  { label: 'Hotel perto de mim', icon: Hotel, query: 'hotel perto de mim' },
+  { label: 'Posto de gasolina perto de mim', icon: Fuel, query: 'posto de gasolina perto de mim' },
+  { label: 'Borracharia perto de mim', icon: CircleDot, query: 'borracharia perto de mim' },
+  { label: 'Oficina de moto perto de mim', icon: Wrench, query: 'oficina de moto perto de mim' },
+  { label: 'Farmácia perto de mim', icon: Pill, query: 'farmácia perto de mim' },
+  { label: 'Hospital perto de mim', icon: Hospital, query: 'hospital perto de mim', tone: 'danger' },
+  { label: 'Polícia rodoviária perto de mim', icon: ShieldAlert, query: 'polícia rodoviária perto de mim', tone: 'danger' },
+  { label: 'Caixa eletrônico perto de mim', icon: CreditCard, query: 'caixa eletrônico perto de mim' },
+  { label: 'Ponto turístico perto de mim', icon: MapPin, query: 'ponto turístico perto de mim' },
 ];
 
 function buildMapsUrl(query: string, coordinates?: Coordinates) {
@@ -77,7 +91,9 @@ export function SOSEstradaPage() {
 
       <div className="mb-5 rounded-[2rem] border border-red-400/20 bg-gradient-to-br from-road via-asphalt to-black p-5 text-white shadow-glow">
         <div className="flex items-start gap-4">
-          <span className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-ember to-flame text-2xl shadow-glow">🆘</span>
+          <span className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-ember to-flame text-2xl shadow-glow">
+            <Landmark size={28} strokeWidth={2.4} aria-hidden="true" />
+          </span>
           <div>
             <h2 className="text-xl font-black">Toque e abra no Maps</h2>
             <p className="mt-2 text-sm font-semibold leading-relaxed text-white/70">
@@ -90,30 +106,36 @@ export function SOSEstradaPage() {
       </div>
 
       <div className="space-y-3">
-        {sosActions.map((action) => (
-          <button
-            key={action.query}
-            type="button"
-            onClick={() => openMaps(action.query)}
-            className={`flex min-h-16 w-full items-center justify-between rounded-3xl px-4 text-left shadow-soft transition active:scale-[0.99] ${
-              action.tone === 'danger'
-                ? 'border border-red-300/30 bg-red-950/65 text-red-50'
-                : 'border border-white/10 bg-white/10 text-white backdrop-blur'
-            }`}
-          >
-            <span className="flex items-center gap-3">
-              <span
-                className={`grid size-12 place-items-center rounded-2xl text-2xl ${
-                  action.tone === 'danger' ? 'bg-red-100' : 'bg-orange-100'
-                }`}
-              >
-                {action.icon}
+        {sosActions.map((action) => {
+          const Icon = action.icon;
+
+          return (
+            <button
+              key={action.query}
+              type="button"
+              onClick={() => openMaps(action.query)}
+              className={`flex min-h-[4.75rem] w-full items-center justify-between rounded-3xl px-4 text-left shadow-soft transition active:scale-[0.99] ${
+                action.tone === 'danger'
+                  ? 'border border-red-300/30 bg-red-950/65 text-red-50'
+                  : 'border border-white/10 bg-white/10 text-white backdrop-blur'
+              }`}
+            >
+              <span className="flex items-center gap-3">
+                <span
+                  className={`grid size-12 place-items-center rounded-2xl ${
+                    action.tone === 'danger' ? 'bg-red-500/25' : 'bg-orange-500/20'
+                  }`}
+                >
+                  <Icon size={24} strokeWidth={2.4} aria-hidden="true" />
+                </span>
+                <span className="text-base font-black">{action.label}</span>
               </span>
-              <span className="text-base font-black">{action.label}</span>
-            </span>
-            <span className="text-2xl text-orange-200">›</span>
-          </button>
-        ))}
+              <span className="text-2xl text-orange-200" aria-hidden="true">
+                ›
+              </span>
+            </button>
+          );
+        })}
       </div>
     </section>
   );

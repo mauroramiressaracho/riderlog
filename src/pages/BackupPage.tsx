@@ -35,7 +35,7 @@ export function BackupPage() {
       downloadJson(backup);
       setFeedback({ type: 'success', message: 'Backup exportado com sucesso.' });
     } catch {
-      setFeedback({ type: 'error', message: 'NÃ£o foi possÃ­vel exportar os dados.' });
+      setFeedback({ type: 'error', message: 'Não foi possível exportar os dados.' });
     } finally {
       setIsBusy(false);
     }
@@ -56,14 +56,14 @@ export function BackupPage() {
       const parsed = JSON.parse(text) as unknown;
 
       if (!isValidBackup(parsed)) {
-        setFeedback({ type: 'error', message: 'Arquivo invÃ¡lido. Use um JSON exportado pelo RiderLog.' });
+        setFeedback({ type: 'error', message: 'Arquivo inválido. Use um JSON exportado pelo RiderLog.' });
         return;
       }
 
       await importBackup(parsed);
       setFeedback({ type: 'success', message: 'Dados importados com sucesso.' });
     } catch {
-      setFeedback({ type: 'error', message: 'NÃ£o foi possÃ­vel importar este arquivo.' });
+      setFeedback({ type: 'error', message: 'Não foi possível importar este arquivo.' });
     } finally {
       event.target.value = '';
       setIsBusy(false);
@@ -71,7 +71,7 @@ export function BackupPage() {
   }
 
   async function handleClear() {
-    const confirmed = window.confirm('Essa aÃ§Ã£o apagarÃ¡ todos os dados salvos neste aparelho. Tem certeza?');
+    const confirmed = window.confirm('Essa ação apagará todos os dados salvos neste aparelho. Tem certeza?');
 
     if (!confirmed) {
       return;
@@ -84,7 +84,7 @@ export function BackupPage() {
       await clearAllData();
       setFeedback({ type: 'success', message: 'Todos os dados locais foram apagados.' });
     } catch {
-      setFeedback({ type: 'error', message: 'NÃ£o foi possÃ­vel limpar os dados.' });
+      setFeedback({ type: 'error', message: 'Não foi possível limpar os dados.' });
     } finally {
       setIsBusy(false);
     }
@@ -94,8 +94,8 @@ export function BackupPage() {
     <section>
       <PageHeader
         eyebrow="Backup"
-        title="Seus dados na sua mÃ£o"
-        description="Exporte, importe ou limpe os dados salvos localmente neste navegador. Nada Ã© enviado para servidor."
+        title="Seus dados na sua mão"
+        description="Exporte, importe ou limpe os dados salvos localmente neste navegador. Nada é enviado para servidor."
       />
 
       {feedback ? (
@@ -114,7 +114,7 @@ export function BackupPage() {
         <div className="rounded-[2rem] bg-white p-5 shadow-soft">
           <h2 className="text-xl font-black text-asphalt">Exportar dados</h2>
           <p className="mt-2 text-sm font-semibold leading-relaxed text-gray-600">
-            Gera um arquivo JSON com moto, abastecimentos, viagens, manutenÃ§Ãµes, pontos salvos, checklists e configuraÃ§Ãµes.
+            Gera um arquivo JSON com moto, abastecimentos, viagens, manutenções, pontos salvos, checklists e configurações.
           </p>
           <button
             type="button"
@@ -129,7 +129,7 @@ export function BackupPage() {
         <div className="rounded-[2rem] bg-white p-5 shadow-soft">
           <h2 className="text-xl font-black text-asphalt">Importar dados</h2>
           <p className="mt-2 text-sm font-semibold leading-relaxed text-gray-600">
-            Selecione um arquivo JSON exportado pelo RiderLog. O conteÃºdo atual serÃ¡ substituÃ­do.
+            Selecione um arquivo JSON exportado pelo RiderLog. O conteúdo atual será substituído.
           </p>
           <input ref={fileInputRef} type="file" accept="application/json,.json" onChange={handleImport} className="hidden" />
           <button

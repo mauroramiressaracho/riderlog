@@ -112,7 +112,7 @@ export function MinhaMotoPage() {
       <PageHeader
         eyebrow="Minha Moto"
         title={moto ? 'Editar moto' : 'Cadastrar moto'}
-        description="Guarde os dados principais da sua companheira de estrada para alimentar abastecimentos, viagens e manutenÃ§Ã£o."
+        description="Guarde os dados principais da sua companheira de estrada para alimentar abastecimentos, viagens e manutenção."
       />
 
       {saveStatus === 'saved' ? (
@@ -123,13 +123,13 @@ export function MinhaMotoPage() {
 
       {saveStatus === 'error' ? (
         <div className="mb-4 rounded-3xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-800">
-          NÃ£o foi possÃ­vel salvar agora. Tente novamente.
+          Não foi possível salvar agora. Tente novamente.
         </div>
       ) : null}
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="rounded-[2rem] bg-white p-5 shadow-soft">
-          <h2 className="mb-4 text-lg font-black text-asphalt">IdentificaÃ§Ã£o</h2>
+          <h2 className="mb-4 text-lg font-black text-asphalt">Identificação</h2>
           <div className="space-y-4">
             <FormField
               id="apelido"
@@ -200,11 +200,11 @@ export function MinhaMotoPage() {
         </div>
 
         <div className="rounded-[2rem] bg-white p-5 shadow-soft">
-          <h2 className="mb-4 text-lg font-black text-asphalt">Consumo mÃ©dio</h2>
+          <h2 className="mb-4 text-lg font-black text-asphalt">Consumo médio</h2>
           <div className="space-y-4">
             <FormField
               id="consumoMedioUrbano"
-              label="Consumo mÃ©dio urbano"
+              label="Consumo médio urbano"
               hint="Informe em km/l"
               inputMode="decimal"
               placeholder="28"
@@ -214,7 +214,7 @@ export function MinhaMotoPage() {
             />
             <FormField
               id="consumoMedioEstrada"
-              label="Consumo mÃ©dio estrada"
+              label="Consumo médio estrada"
               hint="Informe em km/l"
               inputMode="decimal"
               placeholder="32"
@@ -230,7 +230,7 @@ export function MinhaMotoPage() {
           disabled={isLoading || saveStatus === 'saving'}
           className="sticky bottom-24 h-14 w-full rounded-2xl bg-gradient-to-br from-ember to-flame text-base font-black text-white shadow-glow transition active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-gray-400"
         >
-          {saveStatus === 'saving' ? 'Salvando...' : moto ? 'Salvar alteraÃ§Ãµes' : 'Cadastrar moto'}
+          {saveStatus === 'saving' ? 'Salvando...' : moto ? 'Salvar alterações' : 'Cadastrar moto'}
         </button>
       </form>
     </section>

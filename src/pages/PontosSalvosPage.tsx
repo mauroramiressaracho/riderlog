@@ -20,9 +20,9 @@ const placeTypes = [
   'Posto',
   'Borracharia',
   'Oficina',
-  'FarmÃ¡cia',
+  'Farmácia',
   'Hospital',
-  'Ponto turÃ­stico',
+  'Ponto turístico',
   'Ponto de descanso',
   'Local perigoso',
   'Outro',
@@ -59,7 +59,7 @@ function buildMapsSearchUrl(place: PontoSalvo) {
 
 function shortText(value?: string) {
   if (!value) {
-    return 'Sem observaÃ§Ãµes.';
+    return 'Sem observações.';
   }
 
   return value.length > 86 ? `${value.slice(0, 86).trim()}...` : value;
@@ -141,7 +141,7 @@ export function PontosSalvosPage() {
       return;
     }
 
-    const confirmed = window.confirm('Excluir este ponto salvo? Esta aÃ§Ã£o nÃ£o pode ser desfeita.');
+    const confirmed = window.confirm('Excluir este ponto salvo? Esta ação não pode ser desfeita.');
 
     if (!confirmed) {
       return;
@@ -154,7 +154,7 @@ export function PontosSalvosPage() {
     <section>
       <PageHeader
         eyebrow="Pontos Salvos"
-        title="Lugares Ãºteis da estrada"
+        title="Lugares úteis da estrada"
         description="Cadastre manualmente locais importantes para consultar depois, mesmo sem internet."
       />
 
@@ -168,7 +168,7 @@ export function PontosSalvosPage() {
         <p className="text-sm font-semibold text-orange-200">Consulta offline</p>
         <h2 className="mt-1 text-3xl font-black">{pontosSalvos.length}</h2>
         <p className="mt-2 text-sm font-semibold text-white/60">
-          Os dados ficam salvos no aparelho. Abrir no Maps depende de conexÃ£o.
+          Os dados ficam salvos no aparelho. Abrir no Maps depende de conexão.
         </p>
       </div>
 
@@ -211,7 +211,7 @@ export function PontosSalvosPage() {
         <div className="rounded-[2rem] border border-dashed border-orange-300 bg-orange-50 p-5">
           <p className="text-lg font-black text-asphalt">Nenhum ponto encontrado.</p>
           <p className="mt-2 text-sm leading-relaxed text-gray-600">
-            Salve restaurantes, oficinas, pousadas e lugares Ãºteis antes ou durante a viagem.
+            Salve restaurantes, oficinas, pousadas e lugares úteis antes ou durante a viagem.
           </p>
         </div>
       ) : null}
@@ -292,9 +292,9 @@ export function PontosSalvosPage() {
                 type="button"
                 onClick={closeForm}
                 className="grid size-11 place-items-center rounded-2xl bg-white text-2xl font-black text-gray-500"
-                aria-label="Fechar formulÃ¡rio"
+                aria-label="Fechar formulário"
               >
-                Ã—
+                ×
               </button>
             </div>
 
@@ -307,7 +307,7 @@ export function PontosSalvosPage() {
 
               {saveStatus === 'error' ? (
                 <div className="rounded-3xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-800">
-                  NÃ£o foi possÃ­vel salvar. Tente novamente.
+                  Não foi possível salvar. Tente novamente.
                 </div>
               ) : null}
 
@@ -343,15 +343,15 @@ export function PontosSalvosPage() {
                   <FormField
                     id="saved-place-city"
                     label="Cidade/UF"
-                    placeholder="Chapada dos GuimarÃ£es/MT"
+                    placeholder="Chapada dos Guimarães/MT"
                     value={form.cidadeUf}
                     onChange={(event) => updateField('cidadeUf', event.target.value)}
                     required
                   />
                   <FormField
                     id="saved-place-address"
-                    label="EndereÃ§o"
-                    placeholder="Rua, bairro, referÃªncia..."
+                    label="Endereço"
+                    placeholder="Rua, bairro, referência..."
                     value={form.endereco}
                     onChange={(event) => updateField('endereco', event.target.value)}
                   />
@@ -365,8 +365,8 @@ export function PontosSalvosPage() {
                   />
                   <FormField
                     id="saved-place-rating"
-                    label="AvaliaÃ§Ã£o pessoal"
-                    placeholder="Ex: Excelente, bom custo-benefÃ­cio, evitar Ã  noite"
+                    label="Avaliação pessoal"
+                    placeholder="Ex: Excelente, bom custo-benefício, evitar à noite"
                     value={form.avaliacao}
                     onChange={(event) => updateField('avaliacao', event.target.value)}
                   />
@@ -380,12 +380,12 @@ export function PontosSalvosPage() {
                   />
 
                   <label className="block" htmlFor="saved-place-note">
-                    <span className="text-sm font-extrabold text-gray-700">ObservaÃ§Ã£o</span>
+                    <span className="text-sm font-extrabold text-gray-700">Observação</span>
                     <textarea
                       id="saved-place-note"
                       value={form.observacao}
                       onChange={(event) => updateField('observacao', event.target.value)}
-                      placeholder="HorÃ¡rio, atendimento, seguranÃ§a, dica de acesso..."
+                      placeholder="Horário, atendimento, segurança, dica de acesso..."
                       className="mt-2 min-h-28 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-base font-semibold text-asphalt outline-none transition placeholder:text-gray-400 focus:border-ember focus:bg-white focus:ring-4 focus:ring-orange-100"
                     />
                   </label>

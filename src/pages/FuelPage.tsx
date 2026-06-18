@@ -227,7 +227,7 @@ export function FuelPage() {
       return;
     }
 
-    const confirmed = window.confirm('Excluir este abastecimento? Esta aÃ§Ã£o nÃ£o pode ser desfeita.');
+    const confirmed = window.confirm('Excluir este abastecimento? Esta ação não pode ser desfeita.');
 
     if (!confirmed) {
       return;
@@ -242,19 +242,19 @@ export function FuelPage() {
     <section>
       <PageHeader
         eyebrow="Abastecimentos"
-        title="Controle de combustÃ­vel"
-        description="Registre cada parada no posto e acompanhe consumo, custo por km e histÃ³rico."
+        title="Controle de combustível"
+        description="Registre cada parada no posto e acompanhe consumo, custo por km e histórico."
       />
 
       {saveStatus === 'saved' && !isFormOpen ? (
         <div className="mb-4 rounded-3xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-bold text-green-800">
-          Abastecimento salvo e cÃ¡lculos atualizados.
+          Abastecimento salvo e cálculos atualizados.
         </div>
       ) : null}
 
       <div className="mb-5 grid grid-cols-2 gap-3">
         <div className="rounded-3xl bg-asphalt p-4 text-white shadow-soft">
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-orange-200">MÃ©dia geral</p>
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-orange-200">Média geral</p>
           <p className="mt-2 text-2xl font-black">
             {consumoMedioGeral ? `${decimalFormatter.format(consumoMedioGeral)} km/l` : 'Pendente'}
           </p>
@@ -283,7 +283,7 @@ export function FuelPage() {
         <div className="rounded-[2rem] border border-dashed border-orange-300 bg-orange-50 p-5">
           <p className="text-lg font-black text-asphalt">Nenhum abastecimento registrado.</p>
           <p className="mt-2 text-sm leading-relaxed text-gray-600">
-            Cadastre o primeiro abastecimento para comeÃ§ar a calcular consumo e custo por km.
+            Cadastre o primeiro abastecimento para começar a calcular consumo e custo por km.
           </p>
         </div>
       ) : null}
@@ -312,7 +312,7 @@ export function FuelPage() {
                 <p className="mt-1 font-black text-asphalt">{currencyFormatter.format(abastecimento.valorTotal)}</p>
               </div>
               <div className="rounded-2xl bg-gray-50 p-3">
-                <p className="text-xs font-bold text-gray-400">PreÃ§o/L</p>
+                <p className="text-xs font-bold text-gray-400">Preço/L</p>
                 <p className="mt-1 font-black text-asphalt">{currencyFormatter.format(abastecimento.precoPorLitro)}</p>
               </div>
               <div className="rounded-2xl bg-gray-50 p-3">
@@ -371,9 +371,9 @@ export function FuelPage() {
                 type="button"
                 onClick={closeForm}
                 className="grid size-11 place-items-center rounded-2xl bg-white text-2xl font-black text-gray-500"
-                aria-label="Fechar formulÃ¡rio"
+                aria-label="Fechar formulário"
               >
-                Ã—
+                ×
               </button>
             </div>
 
@@ -386,7 +386,7 @@ export function FuelPage() {
 
               {saveStatus === 'error' ? (
                 <div className="rounded-3xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-800">
-                  NÃ£o foi possÃ­vel salvar. Tente novamente.
+                  Não foi possível salvar. Tente novamente.
                 </div>
               ) : null}
 
@@ -429,7 +429,7 @@ export function FuelPage() {
                   />
                   <FormField
                     id="fuel-price"
-                    label="PreÃ§o por litro"
+                    label="Preço por litro"
                     inputMode="decimal"
                     placeholder="Calculado automaticamente"
                     value={form.precoPorLitro}
@@ -439,14 +439,14 @@ export function FuelPage() {
                   <FormField
                     id="fuel-place"
                     label="Cidade/posto"
-                    placeholder="CuiabÃ¡ - Posto Estrada"
+                    placeholder="Cuiabá - Posto Estrada"
                     value={form.cidadePosto}
                     onChange={(event) => updateField('cidadePosto', event.target.value)}
                     required
                   />
                   <FormField
                     id="fuel-note"
-                    label="ObservaÃ§Ã£o"
+                    label="Observação"
                     placeholder="Gasolina comum, viagem, chuva..."
                     value={form.observacao}
                     onChange={(event) => updateField('observacao', event.target.value)}

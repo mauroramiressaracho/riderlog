@@ -1,4 +1,5 @@
 ﻿import { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { Check, CheckSquare } from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
 import { checklistsRepository, useChecklists, type Checklist, type ChecklistItem } from '../db';
 
@@ -10,7 +11,7 @@ type ChecklistTemplate = {
 
 const suggestedItems = [
   'Calibrar pneus',
-  'Conferir Ã³leo',
+  'Conferir óleo',
   'Conferir corrente',
   'Conferir freios',
   'Conferir farol',
@@ -21,13 +22,13 @@ const suggestedItems = [
   'Levar capa de chuva',
   'Levar luvas',
   'Levar jaqueta',
-  'Levar ferramentas bÃ¡sicas',
+  'Levar ferramentas básicas',
   'Levar kit reparo pneu',
   'Levar power bank',
   'Conferir suporte de celular',
-  'Conferir baÃº/alforges',
-  'Levar Ã¡gua',
-  'Levar dinheiro/cartÃ£o',
+  'Conferir baú/alforges',
+  'Levar água',
+  'Levar dinheiro/cartão',
   'Conferir segunda chave',
 ];
 
@@ -161,7 +162,7 @@ export function ChecklistPage() {
     }
 
     const itens = activeChecklist.itens.filter((item) => item.id !== itemId);
-    await updateItems(activeChecklist, itens, 'Item personalizado excluÃ­do.');
+    await updateItems(activeChecklist, itens, 'Item personalizado excluído.');
   }
 
   return (
@@ -169,7 +170,7 @@ export function ChecklistPage() {
       <PageHeader
         eyebrow="Checklist"
         title="Antes de sair"
-        description="Escolha um modelo, marque os itens da preparaÃ§Ã£o e mantenha tudo salvo no dispositivo."
+        description="Escolha um modelo, marque os itens da preparação e mantenha tudo salvo no dispositivo."
       />
 
       <div className="mb-4 overflow-x-auto pb-1">
@@ -201,9 +202,11 @@ export function ChecklistPage() {
           <div>
             <p className="text-sm font-semibold text-orange-200">{activeTemplate.nome}</p>
             <h2 className="mt-1 text-3xl font-black">{progress.completed}/{progress.total}</h2>
-            <p className="mt-1 text-sm font-semibold text-white/60">itens concluÃ­dos</p>
+            <p className="mt-1 text-sm font-semibold text-white/60">itens concluídos</p>
           </div>
-          <span className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-ember to-flame text-2xl shadow-glow">âœ“</span>
+          <span className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-ember to-flame shadow-glow">
+            <CheckSquare size={28} aria-hidden="true" />
+          </span>
         </div>
         <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/15">
           <div className="h-full rounded-full bg-gradient-to-r from-gold via-ember to-flame transition-all" style={{ width: `${progress.percentage}%` }} />
@@ -225,7 +228,7 @@ export function ChecklistPage() {
               id="custom-checklist-item"
               value={customItem}
               onChange={(event) => setCustomItem(event.target.value)}
-              placeholder="Ex: remÃ©dio, elÃ¡stico, cÃ¢mera..."
+              placeholder="Ex: remédio, elástico, câmera..."
               className="h-14 min-w-0 flex-1 rounded-2xl border border-gray-200 bg-gray-50 px-4 text-base font-semibold text-asphalt outline-none focus:border-ember focus:bg-white focus:ring-4 focus:ring-orange-100"
             />
             <button
@@ -268,7 +271,7 @@ export function ChecklistPage() {
                 }`}
                 aria-label={item.concluido ? `Desmarcar ${item.titulo}` : `Marcar ${item.titulo}`}
               >
-                âœ“
+                {item.concluido ? <Check size={22} strokeWidth={3} aria-hidden="true" /> : null}
               </button>
               <button
                 type="button"
@@ -295,4 +298,3 @@ export function ChecklistPage() {
     </section>
   );
 }
-

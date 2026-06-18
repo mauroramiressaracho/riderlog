@@ -16,18 +16,18 @@ type MaintenanceFormState = {
 type SortMode = 'data' | 'km';
 
 const maintenanceTypes = [
-  'Troca de Ã³leo',
-  'Filtro de Ã³leo',
+  'Troca de óleo',
+  'Filtro de óleo',
   'Filtro de ar',
-  'LubrificaÃ§Ã£o de corrente',
+  'Lubrificação de corrente',
   'Ajuste de corrente',
-  'RelaÃ§Ã£o',
+  'Relação',
   'Pneus',
   'Pastilhas de freio',
   'Fluido de freio',
-  'RevisÃ£o',
+  'Revisão',
   'Bateria',
-  'AcessÃ³rio instalado',
+  'Acessório instalado',
   'Seguro',
   'IPVA/licenciamento',
   'Outro',
@@ -98,14 +98,14 @@ function getMaintenanceAlert(kmAtual?: number, proximaKm?: number) {
 
   if (kmAtual >= proximaKm) {
     return {
-      label: 'ManutenÃ§Ã£o vencida',
+      label: 'Manutenção vencida',
       className: 'bg-red-50 text-red-700 border-red-200',
     };
   }
 
   if (proximaKm - kmAtual < 500) {
     return {
-      label: 'ManutenÃ§Ã£o prÃ³xima',
+      label: 'Manutenção próxima',
       className: 'bg-yellow-50 text-yellow-700 border-yellow-200',
     };
   }
@@ -197,7 +197,7 @@ export function ManutencaoPage() {
       return;
     }
 
-    const confirmed = window.confirm('Excluir esta manutenÃ§Ã£o? Esta aÃ§Ã£o nÃ£o pode ser desfeita.');
+    const confirmed = window.confirm('Excluir esta manutenção? Esta ação não pode ser desfeita.');
 
     if (!confirmed) {
       return;
@@ -209,20 +209,20 @@ export function ManutencaoPage() {
   return (
     <section>
       <PageHeader
-        eyebrow="ManutenÃ§Ã£o"
+        eyebrow="Manutenção"
         title="Cuidados da moto"
-        description="Registre serviÃ§os, gastos e prÃ³ximas revisÃµes para nÃ£o ser surpreendido na estrada."
+        description="Registre serviços, gastos e próximas revisões para não ser surpreendido na estrada."
       />
 
       {saveStatus === 'saved' && !isFormOpen ? (
         <div className="mb-4 rounded-3xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-bold text-green-800">
-          ManutenÃ§Ã£o salva no histÃ³rico.
+          Manutenção salva no histórico.
         </div>
       ) : null}
 
       <div className="mb-4 rounded-[2rem] bg-asphalt p-5 text-white shadow-soft">
         <p className="text-sm font-semibold text-orange-200">Km atual da moto</p>
-        <h2 className="mt-1 text-3xl font-black">{moto ? `${numberFormatter.format(moto.kmAtual)} km` : 'NÃ£o cadastrado'}</h2>
+        <h2 className="mt-1 text-3xl font-black">{moto ? `${numberFormatter.format(moto.kmAtual)} km` : 'Não cadastrado'}</h2>
         <p className="mt-2 text-sm font-semibold text-white/60">
           {moto ? moto.apelido : 'Cadastre sua moto para ativar alertas por quilometragem.'}
         </p>
@@ -254,20 +254,20 @@ export function ManutencaoPage() {
         onClick={openNewForm}
         className="mb-5 h-14 w-full rounded-2xl bg-gradient-to-br from-ember to-flame text-base font-black text-white shadow-glow transition active:scale-[0.99]"
       >
-        Nova manutenÃ§Ã£o
+        Nova manutenção
       </button>
 
       {isLoading ? (
         <div className="rounded-[2rem] bg-white p-5 text-center font-bold text-gray-500 shadow-soft">
-          Carregando manutenÃ§Ãµes...
+          Carregando manutenções...
         </div>
       ) : null}
 
       {!isLoading && sortedMaintenances.length === 0 ? (
         <div className="rounded-[2rem] border border-dashed border-orange-300 bg-orange-50 p-5">
-          <p className="text-lg font-black text-asphalt">Nenhuma manutenÃ§Ã£o registrada.</p>
+          <p className="text-lg font-black text-asphalt">Nenhuma manutenção registrada.</p>
           <p className="mt-2 text-sm leading-relaxed text-gray-600">
-            Comece registrando trocas de Ã³leo, revisÃµes, pneus e outros cuidados da moto.
+            Comece registrando trocas de óleo, revisões, pneus e outros cuidados da moto.
           </p>
         </div>
       ) : null}
@@ -285,7 +285,7 @@ export function ManutencaoPage() {
                   </p>
                   <h2 className="mt-1 text-xl font-black text-asphalt">{manutencao.tipo}</h2>
                   <p className="mt-1 text-sm font-semibold text-gray-500">
-                    {numberFormatter.format(manutencao.km)} km {manutencao.local ? `â€¢ ${manutencao.local}` : ''}
+                    {numberFormatter.format(manutencao.km)} km {manutencao.local ? `• ${manutencao.local}` : ''}
                   </p>
                 </div>
                 <span className="rounded-2xl bg-orange-100 px-3 py-2 text-sm font-black text-orange-700">
@@ -301,9 +301,9 @@ export function ManutencaoPage() {
 
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <div className="rounded-2xl bg-gray-50 p-3">
-                  <p className="text-xs font-bold text-gray-400">PrÃ³xima em</p>
+                  <p className="text-xs font-bold text-gray-400">Próxima em</p>
                   <p className="mt-1 font-black text-asphalt">
-                    {manutencao.proximaKm ? `${numberFormatter.format(manutencao.proximaKm)} km` : 'NÃ£o informado'}
+                    {manutencao.proximaKm ? `${numberFormatter.format(manutencao.proximaKm)} km` : 'Não informado'}
                   </p>
                 </div>
                 <div className="rounded-2xl bg-gray-50 p-3">
@@ -311,7 +311,7 @@ export function ManutencaoPage() {
                   <p className="mt-1 font-black text-asphalt">
                     {moto && manutencao.proximaKm
                       ? `${numberFormatter.format(Math.max(0, manutencao.proximaKm - moto.kmAtual))} km`
-                      : 'â€”'}
+                      : '—'}
                   </p>
                 </div>
               </div>
@@ -351,15 +351,15 @@ export function ManutencaoPage() {
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-ember">
                   {editingMaintenance ? 'Editar' : 'Nova'}
                 </p>
-                <h2 className="text-xl font-black text-asphalt">ManutenÃ§Ã£o</h2>
+                <h2 className="text-xl font-black text-asphalt">Manutenção</h2>
               </div>
               <button
                 type="button"
                 onClick={closeForm}
                 className="grid size-11 place-items-center rounded-2xl bg-white text-2xl font-black text-gray-500"
-                aria-label="Fechar formulÃ¡rio"
+                aria-label="Fechar formulário"
               >
-                Ã—
+                ×
               </button>
             </div>
 
@@ -372,7 +372,7 @@ export function ManutencaoPage() {
 
               {saveStatus === 'error' ? (
                 <div className="rounded-3xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-800">
-                  NÃ£o foi possÃ­vel salvar. Tente novamente.
+                  Não foi possível salvar. Tente novamente.
                 </div>
               ) : null}
 
@@ -397,7 +397,7 @@ export function ManutencaoPage() {
                   />
                   <FormField
                     id="maintenance-type"
-                    label="Tipo de manutenÃ§Ã£o"
+                    label="Tipo de manutenção"
                     list="maintenance-types"
                     placeholder="Escolha ou digite outro tipo"
                     value={form.tipo}
@@ -421,13 +421,13 @@ export function ManutencaoPage() {
                   <FormField
                     id="maintenance-place"
                     label="Oficina/local"
-                    placeholder="Oficina, concessionÃ¡ria ou casa"
+                    placeholder="Oficina, concessionária ou casa"
                     value={form.local}
                     onChange={(event) => updateField('local', event.target.value)}
                   />
                   <FormField
                     id="maintenance-next-km"
-                    label="PrÃ³xima manutenÃ§Ã£o em qual km"
+                    label="Próxima manutenção em qual km"
                     inputMode="numeric"
                     placeholder="15000"
                     value={form.proximaKm}
@@ -435,8 +435,8 @@ export function ManutencaoPage() {
                   />
                   <FormField
                     id="maintenance-note"
-                    label="ObservaÃ§Ã£o"
-                    placeholder="PeÃ§as trocadas, garantia, detalhes..."
+                    label="Observação"
+                    placeholder="Peças trocadas, garantia, detalhes..."
                     value={form.observacao}
                     onChange={(event) => updateField('observacao', event.target.value)}
                   />
@@ -448,7 +448,7 @@ export function ManutencaoPage() {
                 disabled={saveStatus === 'saving'}
                 className="h-14 w-full rounded-2xl bg-gradient-to-br from-ember to-flame text-base font-black text-white shadow-glow transition active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-gray-400"
               >
-                {saveStatus === 'saving' ? 'Salvando...' : 'Salvar manutenÃ§Ã£o'}
+                {saveStatus === 'saving' ? 'Salvando...' : 'Salvar manutenção'}
               </button>
             </form>
           </div>

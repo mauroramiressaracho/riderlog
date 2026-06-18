@@ -1,4 +1,5 @@
 import { type FormEvent, useEffect, useMemo, useState } from 'react';
+import { Fuel, Navigation } from 'lucide-react';
 import { FormField } from '../components/FormField';
 import { PageHeader } from '../components/PageHeader';
 import { useAbastecimentos, useConfiguracoes, useMoto } from '../db';
@@ -171,7 +172,9 @@ export function TripPage() {
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="rounded-[2rem] border border-white/10 bg-white/95 p-5 shadow-soft">
           <h2 className="mb-4 flex items-center gap-2 text-lg font-black text-asphalt">
-            <span className="grid size-9 place-items-center rounded-xl bg-orange-100">🧭</span>
+            <span className="grid size-9 place-items-center rounded-xl bg-orange-100">
+              <Navigation size={18} strokeWidth={2.4} aria-hidden="true" />
+            </span>
             Rota
           </h2>
           <div className="space-y-4">
@@ -203,7 +206,9 @@ export function TripPage() {
 
         <div className="rounded-[2rem] border border-white/10 bg-white/95 p-5 shadow-soft">
           <h2 className="mb-4 flex items-center gap-2 text-lg font-black text-asphalt">
-            <span className="grid size-9 place-items-center rounded-xl bg-orange-100">⛽</span>
+            <span className="grid size-9 place-items-center rounded-xl bg-orange-100">
+              <Fuel size={18} strokeWidth={2.4} aria-hidden="true" />
+            </span>
             Combustível e autonomia
           </h2>
           <div className="space-y-4">

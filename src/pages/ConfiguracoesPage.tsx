@@ -62,16 +62,16 @@ export function ConfiguracoesPage() {
       await configuracoesRepository.create(payload);
     }
 
-    setFeedback('ConfiguraÃ§Ãµes salvas.');
+    setFeedback('Configurações salvas.');
     window.setTimeout(() => setFeedback(''), 1600);
   }
 
   return (
     <section>
       <PageHeader
-        eyebrow="ConfiguraÃ§Ãµes"
-        title="PreferÃªncias do RiderLog"
-        description="Ajuste preferÃªncias locais do app. Tudo fica salvo apenas neste navegador."
+        eyebrow="Configurações"
+        title="Preferências do RiderLog"
+        description="Ajuste preferências locais do app. Tudo fica salvo apenas neste navegador."
       />
 
       {feedback ? (
@@ -82,7 +82,7 @@ export function ConfiguracoesPage() {
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="rounded-[2rem] bg-white p-5 shadow-soft">
-          <h2 className="mb-4 text-xl font-black text-asphalt">AparÃªncia</h2>
+          <h2 className="mb-4 text-xl font-black text-asphalt">Aparência</h2>
           <label className="block" htmlFor="theme">
             <span className="text-sm font-extrabold text-gray-700">Tema</span>
             <select
@@ -102,7 +102,7 @@ export function ConfiguracoesPage() {
           <h2 className="mb-4 text-xl font-black text-asphalt">Autonomia</h2>
           <FormField
             id="safety-margin"
-            label="Margem padrÃ£o de seguranÃ§a da autonomia"
+            label="Margem padrão de segurança da autonomia"
             hint="Percentual usado como reserva no planejamento de viagem"
             inputMode="decimal"
             placeholder="15"
@@ -126,17 +126,17 @@ export function ConfiguracoesPage() {
           type="submit"
           className="h-14 w-full rounded-2xl bg-gradient-to-br from-ember to-flame text-base font-black text-white shadow-glow active:scale-[0.99]"
         >
-          Salvar configuraÃ§Ãµes
+          Salvar configurações
         </button>
       </form>
 
       <div className="mt-5 rounded-[2rem] bg-asphalt p-5 text-white shadow-soft">
         <p className="text-sm font-black uppercase tracking-[0.18em] text-orange-200">Sobre o app</p>
         <h2 className="mt-3 text-2xl font-black">RiderLog</h2>
-        <p className="mt-1 text-lg font-bold text-white/80">Seu diÃ¡rio de bordo na estrada.</p>
+        <p className="mt-1 text-lg font-bold text-white/80">Seu diário de bordo na estrada.</p>
         <p className="mt-4 text-sm font-semibold leading-relaxed text-white/70">
-          App criado para motociclistas controlarem abastecimentos, viagens, manutenÃ§Ã£o, checklists e pontos de apoio.
-          Os dados ficam salvos localmente no navegador do usuÃ¡rio.
+          App criado para motociclistas controlarem abastecimentos, viagens, manutenção, checklists e pontos de apoio.
+          Os dados ficam salvos localmente no navegador do usuário.
         </p>
       </div>
     </section>

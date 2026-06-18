@@ -1,4 +1,5 @@
-﻿import { useMemo } from 'react';
+import { useMemo } from 'react';
+import { Bike, CheckSquare, Fuel, Navigation, ShieldAlert, type LucideIcon } from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
 import { useAbastecimentos, useManutencoes, useMoto, useViagens } from '../db';
 
@@ -18,7 +19,7 @@ type DashboardCardProps = {
 };
 
 type QuickActionProps = {
-  icon: string;
+  icon: LucideIcon;
   title: string;
   onClick: () => void;
 };
@@ -51,14 +52,16 @@ function DashboardCard({ label, value, detail, highlight = false }: DashboardCar
 }
 
 function QuickAction({ icon, title, onClick }: QuickActionProps) {
+  const Icon = icon;
+
   return (
     <button
       type="button"
       onClick={onClick}
       className="flex min-h-24 flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/10 px-3 text-center text-white shadow-soft backdrop-blur transition active:scale-[0.98]"
     >
-      <span className="grid size-12 place-items-center rounded-2xl bg-orange-500/20 text-2xl ring-1 ring-orange-300/20">
-        {icon}
+      <span className="grid size-12 place-items-center rounded-2xl bg-orange-500/20 ring-1 ring-orange-300/20">
+        <Icon size={24} strokeWidth={2.4} aria-hidden="true" />
       </span>
       <span className="mt-2 text-sm font-black">{title}</span>
     </button>
@@ -122,8 +125,8 @@ export function HomePage({ onRegisterMoto, onNewFuel, onPlanTrip, onSOS, onCheck
   return (
     <section>
       <PageHeader
-        title="Seu diÃ¡rio de bordo na estrada."
-        description="Resumo rÃ¡pido da moto, gastos e prÃ³ximas decisÃµes antes de rodar."
+        title="Seu diário de bordo na estrada."
+        description="Resumo rápido da moto, gastos e próximas decisões antes de rodar."
       />
 
       {!moto ? (
@@ -133,7 +136,9 @@ export function HomePage({ onRegisterMoto, onNewFuel, onPlanTrip, onSOS, onCheck
           className="mb-5 w-full rounded-[2rem] border border-orange-300/30 bg-gradient-to-br from-road to-asphalt p-5 text-left shadow-glow transition active:scale-[0.99]"
         >
           <div className="flex items-center gap-4">
-            <span className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-ember to-flame text-2xl shadow-glow">ðŸï¸</span>
+            <span className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-ember to-flame text-white shadow-glow">
+              <Bike size={28} strokeWidth={2.4} aria-hidden="true" />
+            </span>
             <span>
               <span className="block text-xl font-black text-white">Cadastre sua moto</span>
               <span className="mt-1 block text-sm font-semibold leading-relaxed text-slate-300">
@@ -150,7 +155,9 @@ export function HomePage({ onRegisterMoto, onNewFuel, onPlanTrip, onSOS, onCheck
               <h2 className="mt-2 text-3xl font-black leading-tight text-white">{moto.apelido}</h2>
               <p className="mt-2 text-sm font-semibold text-slate-300">{moto.marca}</p>
             </div>
-            <span className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-ember to-flame text-2xl shadow-glow">ðŸï¸</span>
+            <span className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-ember to-flame text-white shadow-glow">
+              <Bike size={28} strokeWidth={2.4} aria-hidden="true" />
+            </span>
           </div>
           <div className="mt-5 h-1 rounded-full bg-gradient-to-r from-gold via-ember to-flame" />
         </div>
@@ -160,7 +167,7 @@ export function HomePage({ onRegisterMoto, onNewFuel, onPlanTrip, onSOS, onCheck
         <DashboardCard
           label="Km atual"
           value={moto ? `${numberFormatter.format(moto.kmAtual)} km` : 'Pendente'}
-          detail={moto ? 'OdÃ´metro da moto' : 'Cadastre a moto'}
+          detail={moto ? 'Odômetro da moto' : 'Cadastre a moto'}
           highlight
         />
         <DashboardCard
@@ -183,36 +190,35 @@ export function HomePage({ onRegisterMoto, onNewFuel, onPlanTrip, onSOS, onCheck
           detail={abastecimentos.length > 0 ? 'Com base nos abastecimentos' : 'Sem abastecimentos'}
         />
         <DashboardCard
-          label="CombustÃ­vel"
+          label="Combustível"
           value={currencyFormatter.format(dashboard.totalGastoCombustivel)}
           detail="Total registrado"
         />
         <DashboardCard
-          label="Ãšltima viagem"
+          label="Última viagem"
           value={dashboard.ultimaViagem ? dashboard.ultimaViagem.destino : 'Nenhuma viagem registrada'}
-          detail={dashboard.ultimaViagem ? `${dashboard.ultimaViagem.origem} â€¢ ${formatDate(dashboard.ultimaViagem.data)}` : undefined}
+          detail={dashboard.ultimaViagem ? `${dashboard.ultimaViagem.origem} • ${formatDate(dashboard.ultimaViagem.data)}` : undefined}
         />
         <DashboardCard
-          label="PrÃ³xima manutenÃ§Ã£o"
+          label="Próxima manutenção"
           value={
             dashboard.proximaManutencao?.proximaKm
               ? `${numberFormatter.format(dashboard.proximaManutencao.proximaKm)} km`
-              : 'Sem manutenÃ§Ã£o programada'
+              : 'Sem manutenção programada'
           }
           detail={dashboard.proximaManutencao?.tipo}
         />
       </div>
 
       <div className="mt-6">
-        <h2 className="mb-3 text-lg font-black text-white">Atalhos rÃ¡pidos</h2>
+        <h2 className="mb-3 text-lg font-black text-white">Atalhos rápidos</h2>
         <div className="grid grid-cols-2 gap-3">
-          <QuickAction icon="â›½" title="Novo abastecimento" onClick={onNewFuel} />
-          <QuickAction icon="ðŸ§­" title="Planejar viagem" onClick={onPlanTrip} />
-          <QuickAction icon="ðŸ†˜" title="SOS Estrada" onClick={onSOS} />
-          <QuickAction icon="âœ“" title="Checklist" onClick={onChecklist} />
+          <QuickAction icon={Fuel} title="Novo abastecimento" onClick={onNewFuel} />
+          <QuickAction icon={Navigation} title="Planejar viagem" onClick={onPlanTrip} />
+          <QuickAction icon={ShieldAlert} title="SOS Estrada" onClick={onSOS} />
+          <QuickAction icon={CheckSquare} title="Checklist" onClick={onChecklist} />
         </div>
       </div>
     </section>
   );
 }
-

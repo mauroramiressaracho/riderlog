@@ -15,6 +15,7 @@ export function BottomNavigation({ activeTab, onTabChange }: BottomNavigationPro
       <div className="grid grid-cols-5 gap-1">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
+          const Icon = tab.icon;
 
           return (
             <button
@@ -28,7 +29,7 @@ export function BottomNavigation({ activeTab, onTabChange }: BottomNavigationPro
                   : 'text-slate-400 active:bg-white/10 active:text-white'
               }`}
             >
-              <span className="text-xl leading-none">{tab.icon}</span>
+              <Icon size={22} strokeWidth={2.5} aria-hidden="true" />
               <span className="mt-1 truncate">{tab.label}</span>
             </button>
           );

@@ -66,7 +66,7 @@ function formatDate(value: string) {
 
 function shortText(value?: string) {
   if (!value) {
-    return 'Sem observaÃ§Ãµes registradas.';
+    return 'Sem observações registradas.';
   }
 
   return value.length > 92 ? `${value.slice(0, 92).trim()}...` : value;
@@ -158,7 +158,7 @@ export function HistoricoViagensPage() {
       return;
     }
 
-    const confirmed = window.confirm('Excluir esta viagem do diÃ¡rio? Esta aÃ§Ã£o nÃ£o pode ser desfeita.');
+    const confirmed = window.confirm('Excluir esta viagem do diário? Esta ação não pode ser desfeita.');
 
     if (!confirmed) {
       return;
@@ -170,14 +170,14 @@ export function HistoricoViagensPage() {
   return (
     <section>
       <PageHeader
-        eyebrow="HistÃ³rico de Viagens"
-        title="DiÃ¡rio de bordo"
-        description="Registre as viagens realizadas, gastos, condiÃ§Ãµes da estrada e memÃ³rias do caminho."
+        eyebrow="Histórico de Viagens"
+        title="Diário de bordo"
+        description="Registre as viagens realizadas, gastos, condições da estrada e memórias do caminho."
       />
 
       {saveStatus === 'saved' && !isFormOpen ? (
         <div className="mb-4 rounded-3xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-bold text-green-800">
-          Viagem salva no diÃ¡rio de bordo.
+          Viagem salva no diário de bordo.
         </div>
       ) : null}
 
@@ -185,7 +185,7 @@ export function HistoricoViagensPage() {
         <p className="text-sm font-semibold text-orange-200">Viagens registradas</p>
         <h2 className="mt-1 text-3xl font-black">{viagens.length}</h2>
         <p className="mt-2 text-sm font-semibold text-white/60">
-          Cada card aqui vira memÃ³ria, estatÃ­stica e contexto para o dashboard.
+          Cada card aqui vira memória, estatística e contexto para o dashboard.
         </p>
       </div>
 
@@ -207,7 +207,7 @@ export function HistoricoViagensPage() {
         <div className="rounded-[2rem] border border-dashed border-orange-300 bg-orange-50 p-5">
           <p className="text-lg font-black text-asphalt">Nenhuma viagem registrada.</p>
           <p className="mt-2 text-sm leading-relaxed text-gray-600">
-            Quando o primeiro rolÃª entrar aqui, ele tambÃ©m aparece como Ãºltima viagem no dashboard.
+            Quando o primeiro rolê entrar aqui, ele também aparece como última viagem no dashboard.
           </p>
         </div>
       ) : null}
@@ -242,12 +242,12 @@ export function HistoricoViagensPage() {
               <div className="rounded-2xl bg-gray-50 p-3">
                 <p className="text-xs font-bold text-gray-400">Consumo</p>
                 <p className="mt-1 font-black text-asphalt">
-                  {viagem.consumoMedio ? `${numberFormatter.format(viagem.consumoMedio)} km/l` : 'â€”'}
+                  {viagem.consumoMedio ? `${numberFormatter.format(viagem.consumoMedio)} km/l` : '—'}
                 </p>
               </div>
               <div className="rounded-2xl bg-gray-50 p-3">
                 <p className="text-xs font-bold text-gray-400">Estrada</p>
-                <p className="mt-1 font-black text-asphalt">{viagem.condicaoEstrada ?? 'â€”'}</p>
+                <p className="mt-1 font-black text-asphalt">{viagem.condicaoEstrada ?? '—'}</p>
               </div>
             </div>
 
@@ -295,9 +295,9 @@ export function HistoricoViagensPage() {
                 type="button"
                 onClick={closeForm}
                 className="grid size-11 place-items-center rounded-2xl bg-white text-2xl font-black text-gray-500"
-                aria-label="Fechar formulÃ¡rio"
+                aria-label="Fechar formulário"
               >
-                Ã—
+                ×
               </button>
             </div>
 
@@ -310,7 +310,7 @@ export function HistoricoViagensPage() {
 
               {saveStatus === 'error' ? (
                 <div className="rounded-3xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-800">
-                  NÃ£o foi possÃ­vel salvar. Tente novamente.
+                  Não foi possível salvar. Tente novamente.
                 </div>
               ) : null}
 
@@ -327,7 +327,7 @@ export function HistoricoViagensPage() {
                   <FormField
                     id="trip-history-origin"
                     label="Origem"
-                    placeholder="CuiabÃ¡"
+                    placeholder="Cuiabá"
                     value={form.origem}
                     onChange={(event) => updateField('origem', event.target.value)}
                     required
@@ -335,7 +335,7 @@ export function HistoricoViagensPage() {
                   <FormField
                     id="trip-history-destination"
                     label="Destino"
-                    placeholder="Chapada dos GuimarÃ£es"
+                    placeholder="Chapada dos Guimarães"
                     value={form.destino}
                     onChange={(event) => updateField('destino', event.target.value)}
                     required
@@ -360,7 +360,7 @@ export function HistoricoViagensPage() {
                   />
                   <FormField
                     id="trip-history-consumption"
-                    label="Consumo mÃ©dio"
+                    label="Consumo médio"
                     inputMode="decimal"
                     placeholder="30"
                     value={form.consumoMedio}
@@ -368,7 +368,7 @@ export function HistoricoViagensPage() {
                   />
 
                   <label className="block" htmlFor="trip-history-rating">
-                    <span className="text-sm font-extrabold text-gray-700">AvaliaÃ§Ã£o da viagem</span>
+                    <span className="text-sm font-extrabold text-gray-700">Avaliação da viagem</span>
                     <select
                       id="trip-history-rating"
                       value={form.avaliacao}
@@ -385,7 +385,7 @@ export function HistoricoViagensPage() {
                   </label>
 
                   <label className="block" htmlFor="trip-history-road">
-                    <span className="text-sm font-extrabold text-gray-700">CondiÃ§Ã£o da estrada</span>
+                    <span className="text-sm font-extrabold text-gray-700">Condição da estrada</span>
                     <select
                       id="trip-history-road"
                       value={form.condicaoEstrada}
@@ -412,12 +412,12 @@ export function HistoricoViagensPage() {
                   </label>
 
                   <label className="block" htmlFor="trip-history-notes">
-                    <span className="text-sm font-extrabold text-gray-700">ObservaÃ§Ãµes</span>
+                    <span className="text-sm font-extrabold text-gray-700">Observações</span>
                     <textarea
                       id="trip-history-notes"
                       value={form.observacoes}
                       onChange={(event) => updateField('observacoes', event.target.value)}
-                      placeholder="Paisagem, estrada, paradas, perrengues e boas memÃ³rias..."
+                      placeholder="Paisagem, estrada, paradas, perrengues e boas memórias..."
                       className="mt-2 min-h-28 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-base font-semibold text-asphalt outline-none transition placeholder:text-gray-400 focus:border-ember focus:bg-white focus:ring-4 focus:ring-orange-100"
                     />
                   </label>
