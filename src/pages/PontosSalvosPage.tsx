@@ -1,4 +1,5 @@
 ﻿import { type FormEvent, useMemo, useState } from 'react';
+import { useAppFeedback } from '../components/AppFeedback';
 import { FormField } from '../components/FormField';
 import { PageHeader } from '../components/PageHeader';
 import { pontosSalvosRepository, usePontosSalvos, type PontoSalvo } from '../db';
@@ -67,6 +68,7 @@ function shortText(value?: string) {
 
 export function PontosSalvosPage() {
   const { data: pontosSalvos, isLoading } = usePontosSalvos();
+  const { confirm, showToast } = useAppFeedback();
   const [activeType, setActiveType] = useState('Todos');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingPlace, setEditingPlace] = useState<PontoSalvo>();
@@ -109,6 +111,18 @@ export function PontosSalvosPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (saveStatus === 'saving') return;
+
+    if (!form.nome.trim()) {
+      showToast('Nome do ponto salvo é obrigatório.', 'warning');
+      return;
+    }
+
+    if (!form.tipo) {
+      showToast('Informe o tipo do ponto salvo.', 'warning');
+      return;
+    }
+
     setSaveStatus('saving');
 
     const payload = {
@@ -130,9 +144,11 @@ export function PontosSalvosPage() {
       }
 
       setSaveStatus('saved');
+      showToast(editingPlace ? 'Ponto salvo atualizado com sucesso.' : 'Ponto salvo cadastrado com sucesso.', 'success');
       setTimeout(() => closeForm(), 650);
     } catch {
       setSaveStatus('error');
+      showToast('Erro ao salvar ponto.', 'error');
     }
   }
 
@@ -141,13 +157,23 @@ export function PontosSalvosPage() {
       return;
     }
 
-    const confirmed = window.confirm('Excluir este ponto salvo? Esta ação não pode ser desfeita.');
+    const confirmed = await confirm({
+      title: 'Excluir ponto salvo',
+      message: 'Tem certeza que deseja excluir este registro?',
+      confirmLabel: 'Excluir',
+      danger: true,
+    });
 
     if (!confirmed) {
       return;
     }
 
-    await pontosSalvosRepository.remove(place.id);
+    try {
+      await pontosSalvosRepository.remove(place.id);
+      showToast('Ponto salvo excluído.', 'success');
+    } catch {
+      showToast('Não foi possível excluir o ponto salvo.', 'error');
+    }
   }
 
   return (
@@ -406,4 +432,3 @@ export function PontosSalvosPage() {
     </section>
   );
 }
-

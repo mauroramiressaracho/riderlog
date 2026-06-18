@@ -1,4 +1,5 @@
 ﻿import { type FormEvent, useEffect, useMemo, useState } from 'react';
+import { useAppFeedback } from '../components/AppFeedback';
 import { FormField } from '../components/FormField';
 import { PageHeader } from '../components/PageHeader';
 import { motoRepository, useMoto, type Moto } from '../db';
@@ -64,6 +65,7 @@ function motoToForm(moto: Moto): MotoFormState {
 
 export function MinhaMotoPage() {
   const { data: motos, isLoading } = useMoto();
+  const { showToast } = useAppFeedback();
   const moto = useMemo(() => motos[0], [motos]);
   const [form, setForm] = useState<MotoFormState>(emptyForm);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
@@ -81,6 +83,38 @@ export function MinhaMotoPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (saveStatus === 'saving') return;
+
+    if (!form.apelido.trim()) {
+      showToast('Informe o apelido da moto.', 'warning');
+      return;
+    }
+
+    if (!form.marca.trim()) {
+      showToast('Informe a marca da moto.', 'warning');
+      return;
+    }
+
+    if (!form.modelo.trim()) {
+      showToast('Informe o modelo da moto.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.kmAtual) < 0) {
+      showToast('Km atual não pode ser negativo.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.capacidadeTanque) <= 0) {
+      showToast('Informe a capacidade do tanque.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.consumoMedioUrbano) <= 0 || toNumber(form.consumoMedioEstrada) <= 0) {
+      showToast('Informe o consumo médio em km/l.', 'warning');
+      return;
+    }
+
     setSaveStatus('saving');
 
     const payload = {
@@ -102,8 +136,10 @@ export function MinhaMotoPage() {
       }
 
       setSaveStatus('saved');
+      showToast('Moto salva com sucesso.', 'success');
     } catch {
       setSaveStatus('error');
+      showToast('Não foi possível salvar a moto.', 'error');
     }
   }
 
@@ -236,4 +272,3 @@ export function MinhaMotoPage() {
     </section>
   );
 }
-

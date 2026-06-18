@@ -1,4 +1,5 @@
 ﻿import { type FormEvent, useMemo, useState } from 'react';
+import { useAppFeedback } from '../components/AppFeedback';
 import { FormField } from '../components/FormField';
 import { PageHeader } from '../components/PageHeader';
 import { manutencoesRepository, motoRepository, useManutencoes, useMoto, type Manutencao } from '../db';
@@ -116,6 +117,7 @@ function getMaintenanceAlert(kmAtual?: number, proximaKm?: number) {
 export function ManutencaoPage() {
   const { data: manutencoes, isLoading } = useManutencoes();
   const { data: motos } = useMoto();
+  const { confirm, showToast } = useAppFeedback();
   const moto = motos[0];
   const [sortMode, setSortMode] = useState<SortMode>('data');
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -162,6 +164,28 @@ export function ManutencaoPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (saveStatus === 'saving') return;
+
+    if (!form.data) {
+      showToast('Informe a data da manutenção.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.km) < 0) {
+      showToast('Km da manutenção não pode ser negativo.', 'warning');
+      return;
+    }
+
+    if (!form.tipo.trim()) {
+      showToast('Tipo de manutenção é obrigatório.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.valor) < 0) {
+      showToast('Valor gasto não pode ser negativo.', 'warning');
+      return;
+    }
+
     setSaveStatus('saving');
 
     const payload = {
@@ -186,9 +210,11 @@ export function ManutencaoPage() {
       }
 
       setSaveStatus('saved');
+      showToast(editingMaintenance ? 'Manutenção atualizada com sucesso.' : 'Manutenção registrada com sucesso.', 'success');
       setTimeout(() => closeForm(), 650);
     } catch {
       setSaveStatus('error');
+      showToast('Erro ao salvar manutenção.', 'error');
     }
   }
 
@@ -197,13 +223,23 @@ export function ManutencaoPage() {
       return;
     }
 
-    const confirmed = window.confirm('Excluir esta manutenção? Esta ação não pode ser desfeita.');
+    const confirmed = await confirm({
+      title: 'Excluir manutenção',
+      message: 'Tem certeza que deseja excluir este registro?',
+      confirmLabel: 'Excluir',
+      danger: true,
+    });
 
     if (!confirmed) {
       return;
     }
 
-    await manutencoesRepository.remove(manutencao.id);
+    try {
+      await manutencoesRepository.remove(manutencao.id);
+      showToast('Manutenção excluída.', 'success');
+    } catch {
+      showToast('Não foi possível excluir a manutenção.', 'error');
+    }
   }
 
   return (
@@ -457,4 +493,3 @@ export function ManutencaoPage() {
     </section>
   );
 }
-

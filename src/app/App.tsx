@@ -1,5 +1,6 @@
 import { type ReactElement, useMemo, useState } from 'react';
 import { AppShell } from '../components/AppShell';
+import { AppFeedbackProvider } from '../components/AppFeedback';
 import { BackupPage } from '../pages/BackupPage';
 import { ChecklistPage } from '../pages/ChecklistPage';
 import { ConfiguracoesPage } from '../pages/ConfiguracoesPage';
@@ -98,8 +99,10 @@ export function App() {
   }, [activeScreen]);
 
   return (
-    <AppShell activeTab={activeTab} onTabChange={handleTabChange}>
-      {activePage}
-    </AppShell>
+    <AppFeedbackProvider>
+      <AppShell activeTab={activeTab} onTabChange={handleTabChange}>
+        {activePage}
+      </AppShell>
+    </AppFeedbackProvider>
   );
 }

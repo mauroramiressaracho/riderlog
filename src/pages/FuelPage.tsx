@@ -1,4 +1,5 @@
 ﻿import { type FormEvent, useEffect, useMemo, useState } from 'react';
+import { useAppFeedback } from '../components/AppFeedback';
 import { FormField } from '../components/FormField';
 import { PageHeader } from '../components/PageHeader';
 import {
@@ -124,6 +125,7 @@ async function saveRecalculatedLogs(nextLogs: Abastecimento[]) {
 export function FuelPage() {
   const { data: abastecimentos, isLoading } = useAbastecimentos();
   const { data: motos } = useMoto();
+  const { confirm, showToast } = useAppFeedback();
   const moto = motos[0];
   const sortedAbastecimentos = useMemo(() => sortByNewest(abastecimentos), [abastecimentos]);
   const consumoMedioGeral = useMemo(() => {
@@ -185,6 +187,38 @@ export function FuelPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (saveStatus === 'saving') return;
+
+    if (!form.data) {
+      showToast('Informe a data do abastecimento.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.kmAtual) < 0) {
+      showToast('Km atual não pode ser negativo.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.litros) <= 0) {
+      showToast('Litros abastecidos precisa ser maior que zero.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.valorTotal) <= 0) {
+      showToast('Valor total precisa ser maior que zero.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.precoPorLitro) <= 0) {
+      showToast('Preço por litro precisa ser maior que zero.', 'warning');
+      return;
+    }
+
+    if (!form.cidadePosto.trim()) {
+      showToast('Informe a cidade ou posto.', 'warning');
+      return;
+    }
+
     setSaveStatus('saving');
 
     const payload = {
@@ -214,11 +248,13 @@ export function FuelPage() {
       }
 
       setSaveStatus('saved');
+      showToast(editingFuel ? 'Abastecimento atualizado com sucesso.' : 'Abastecimento registrado com sucesso.', 'success');
       setTimeout(() => {
         closeForm();
       }, 650);
     } catch {
       setSaveStatus('error');
+      showToast('Erro ao salvar abastecimento.', 'error');
     }
   }
 
@@ -227,15 +263,25 @@ export function FuelPage() {
       return;
     }
 
-    const confirmed = window.confirm('Excluir este abastecimento? Esta ação não pode ser desfeita.');
+    const confirmed = await confirm({
+      title: 'Excluir abastecimento',
+      message: 'Tem certeza que deseja excluir este registro?',
+      confirmLabel: 'Excluir',
+      danger: true,
+    });
 
     if (!confirmed) {
       return;
     }
 
-    await abastecimentosRepository.remove(abastecimento.id);
-    const nextLogs = await abastecimentosRepository.list();
-    await saveRecalculatedLogs(nextLogs);
+    try {
+      await abastecimentosRepository.remove(abastecimento.id);
+      const nextLogs = await abastecimentosRepository.list();
+      await saveRecalculatedLogs(nextLogs);
+      showToast('Abastecimento excluído.', 'success');
+    } catch {
+      showToast('Não foi possível excluir o abastecimento.', 'error');
+    }
   }
 
   return (
@@ -468,4 +514,3 @@ export function FuelPage() {
     </section>
   );
 }
-

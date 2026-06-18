@@ -1,5 +1,6 @@
 ﻿import { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { Check, CheckSquare } from 'lucide-react';
+import { useAppFeedback } from '../components/AppFeedback';
 import { PageHeader } from '../components/PageHeader';
 import { checklistsRepository, useChecklists, type Checklist, type ChecklistItem } from '../db';
 
@@ -71,9 +72,11 @@ function getProgress(items: ChecklistItem[]) {
 
 export function ChecklistPage() {
   const { data: checklists, isLoading } = useChecklists();
+  const { confirm, showToast } = useAppFeedback();
   const [activeType, setActiveType] = useState(checklistTemplates[0].tipo);
   const [customItem, setCustomItem] = useState('');
   const [feedback, setFeedback] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
   const ensuringTypes = useRef(new Set<string>());
 
   const activeTemplate = checklistTemplates.find((template) => template.tipo === activeType) ?? checklistTemplates[0];
@@ -108,16 +111,25 @@ export function ChecklistPage() {
       return;
     }
 
-    await checklistsRepository.update(checklist.id, { itens });
+    setIsUpdating(true);
 
-    if (message) {
-      setFeedback(message);
-      window.setTimeout(() => setFeedback(''), 1600);
+    try {
+      await checklistsRepository.update(checklist.id, { itens });
+
+      if (message) {
+        setFeedback(message);
+        showToast(message, 'success');
+        window.setTimeout(() => setFeedback(''), 1600);
+      }
+    } catch {
+      showToast('Não foi possível salvar o checklist.', 'error');
+    } finally {
+      setIsUpdating(false);
     }
   }
 
   async function toggleItem(itemId: string) {
-    if (!activeChecklist) {
+    if (!activeChecklist || isUpdating) {
       return;
     }
 
@@ -126,10 +138,22 @@ export function ChecklistPage() {
     );
 
     await updateItems(activeChecklist, itens);
+    showToast('Checklist atualizado.', 'success', 1400);
   }
 
   async function resetChecklist() {
-    if (!activeChecklist) {
+    if (!activeChecklist || isUpdating) {
+      return;
+    }
+
+    const confirmed = await confirm({
+      title: 'Resetar checklist',
+      message: 'Tem certeza que deseja desmarcar todos os itens deste checklist?',
+      confirmLabel: 'Resetar',
+      danger: true,
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -140,7 +164,12 @@ export function ChecklistPage() {
   async function addCustomItem(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!activeChecklist || !customItem.trim()) {
+    if (!activeChecklist || isUpdating) {
+      return;
+    }
+
+    if (!customItem.trim()) {
+      showToast('Digite um item personalizado.', 'warning');
       return;
     }
 
@@ -157,7 +186,18 @@ export function ChecklistPage() {
   }
 
   async function deleteCustomItem(itemId: string) {
-    if (!activeChecklist) {
+    if (!activeChecklist || isUpdating) {
+      return;
+    }
+
+    const confirmed = await confirm({
+      title: 'Excluir item',
+      message: 'Tem certeza que deseja excluir este item personalizado?',
+      confirmLabel: 'Excluir',
+      danger: true,
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -233,9 +273,10 @@ export function ChecklistPage() {
             />
             <button
               type="submit"
+              disabled={isUpdating}
               className="h-14 rounded-2xl bg-gradient-to-br from-ember to-flame px-4 text-sm font-black text-white active:scale-[0.98]"
             >
-              Adicionar
+              {isUpdating ? 'Salvando...' : 'Adicionar'}
             </button>
           </div>
         </label>
@@ -244,10 +285,10 @@ export function ChecklistPage() {
       <button
         type="button"
         onClick={resetChecklist}
-        disabled={!activeChecklist}
+        disabled={!activeChecklist || isUpdating}
         className="mb-4 h-12 w-full rounded-2xl border border-white/10 bg-white/15 text-sm font-black text-white shadow-soft backdrop-blur active:scale-[0.99] disabled:text-gray-400"
       >
-        Resetar checklist
+        {isUpdating ? 'Processando...' : 'Resetar checklist'}
       </button>
 
       {isLoading || !activeChecklist ? (
@@ -266,6 +307,7 @@ export function ChecklistPage() {
               <button
                 type="button"
                 onClick={() => toggleItem(item.id)}
+                disabled={isUpdating}
                 className={`grid size-11 shrink-0 place-items-center rounded-2xl border-2 text-xl font-black ${
                   item.concluido ? 'border-green-400 bg-green-500 text-white' : 'border-slate-500 bg-white/10 text-transparent'
                 }`}
@@ -286,6 +328,7 @@ export function ChecklistPage() {
                 <button
                   type="button"
                   onClick={() => deleteCustomItem(item.id)}
+                  disabled={isUpdating}
                   className="h-11 rounded-2xl bg-red-50 px-3 text-xs font-black text-red-600 active:scale-[0.98]"
                 >
                   Excluir

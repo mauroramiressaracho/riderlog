@@ -1,5 +1,6 @@
 import { type FormEvent, useEffect, useMemo, useState } from 'react';
 import { Fuel, Navigation } from 'lucide-react';
+import { useAppFeedback } from '../components/AppFeedback';
 import { FormField } from '../components/FormField';
 import { PageHeader } from '../components/PageHeader';
 import { useAbastecimentos, useConfiguracoes, useMoto } from '../db';
@@ -68,6 +69,7 @@ export function TripPage() {
   const { data: motos } = useMoto();
   const { data: abastecimentos } = useAbastecimentos();
   const { data: configuracoes } = useConfiguracoes();
+  const { showToast } = useAppFeedback();
   const moto = motos[0];
   const settings = configuracoes[0];
 
@@ -136,7 +138,9 @@ export function TripPage() {
     const margemSeguranca = toNumber(form.margemSeguranca);
 
     if (distanciaKm <= 0 || consumoMedio <= 0 || valorGasolina <= 0 || capacidadeTanque <= 0) {
-      setError('Informe distância, consumo, gasolina e tanque com valores maiores que zero.');
+      const message = 'Informe distância, consumo, gasolina e tanque com valores maiores que zero.';
+      setError(message);
+      showToast(message, 'warning');
       return;
     }
 
@@ -153,12 +157,14 @@ export function TripPage() {
       autonomiaSegura,
       paradasAproximadas,
     });
+    showToast('Estimativa calculada com sucesso.', 'success');
   }
 
   function handleClear() {
     setForm(suggestedForm);
     setEstimate(undefined);
     setError('');
+    showToast('Campos limpos.', 'info');
   }
 
   return (

@@ -1,4 +1,5 @@
 ﻿import { ChangeEvent, useRef, useState } from 'react';
+import { ProgressBar, useAppFeedback } from '../components/AppFeedback';
 import { PageHeader } from '../components/PageHeader';
 import { clearAllData, exportBackup, importBackup, isValidBackup } from '../db';
 
@@ -23,6 +24,7 @@ function downloadJson(content: unknown) {
 
 export function BackupPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { confirm, showToast } = useAppFeedback();
   const [feedback, setFeedback] = useState<Feedback>();
   const [isBusy, setIsBusy] = useState(false);
 
@@ -34,8 +36,10 @@ export function BackupPage() {
       const backup = await exportBackup();
       downloadJson(backup);
       setFeedback({ type: 'success', message: 'Backup exportado com sucesso.' });
+      showToast('Backup exportado com sucesso.', 'success');
     } catch {
       setFeedback({ type: 'error', message: 'Não foi possível exportar os dados.' });
+      showToast('Não foi possível exportar os dados.', 'error');
     } finally {
       setIsBusy(false);
     }
@@ -57,13 +61,27 @@ export function BackupPage() {
 
       if (!isValidBackup(parsed)) {
         setFeedback({ type: 'error', message: 'Arquivo inválido. Use um JSON exportado pelo RiderLog.' });
+        showToast('Arquivo inválido. Use um JSON exportado pelo RiderLog.', 'error');
+        return;
+      }
+
+      const confirmed = await confirm({
+        title: 'Importar backup',
+        message: 'A importação substituirá os dados salvos neste aparelho. Deseja continuar?',
+        confirmLabel: 'Importar',
+        danger: true,
+      });
+
+      if (!confirmed) {
         return;
       }
 
       await importBackup(parsed);
       setFeedback({ type: 'success', message: 'Dados importados com sucesso.' });
+      showToast('Dados importados com sucesso.', 'success');
     } catch {
       setFeedback({ type: 'error', message: 'Não foi possível importar este arquivo.' });
+      showToast('Não foi possível importar este arquivo.', 'error');
     } finally {
       event.target.value = '';
       setIsBusy(false);
@@ -71,7 +89,12 @@ export function BackupPage() {
   }
 
   async function handleClear() {
-    const confirmed = window.confirm('Essa ação apagará todos os dados salvos neste aparelho. Tem certeza?');
+    const confirmed = await confirm({
+      title: 'Limpar todos os dados',
+      message: 'Essa ação apagará todos os dados salvos neste aparelho. Tem certeza?',
+      confirmLabel: 'Apagar dados',
+      danger: true,
+    });
 
     if (!confirmed) {
       return;
@@ -83,8 +106,10 @@ export function BackupPage() {
     try {
       await clearAllData();
       setFeedback({ type: 'success', message: 'Todos os dados locais foram apagados.' });
+      showToast('Dados apagados com sucesso.', 'success');
     } catch {
       setFeedback({ type: 'error', message: 'Não foi possível limpar os dados.' });
+      showToast('Não foi possível limpar os dados.', 'error');
     } finally {
       setIsBusy(false);
     }
@@ -110,6 +135,13 @@ export function BackupPage() {
         </div>
       ) : null}
 
+      {isBusy ? (
+        <div className="mb-4 rounded-3xl border border-orange-300/30 bg-slate-950/80 p-4 text-sm font-black text-orange-50 shadow-soft backdrop-blur">
+          <p className="mb-3">Processando...</p>
+          <ProgressBar />
+        </div>
+      ) : null}
+
       <div className="space-y-4">
         <div className="rounded-[2rem] bg-white p-5 shadow-soft">
           <h2 className="text-xl font-black text-asphalt">Exportar dados</h2>
@@ -122,7 +154,7 @@ export function BackupPage() {
             disabled={isBusy}
             className="mt-4 h-14 w-full rounded-2xl bg-gradient-to-br from-ember to-flame text-base font-black text-white shadow-glow active:scale-[0.99] disabled:bg-gray-400"
           >
-            Exportar dados
+            {isBusy ? 'Processando...' : 'Exportar dados'}
           </button>
         </div>
 
@@ -138,7 +170,7 @@ export function BackupPage() {
             disabled={isBusy}
             className="mt-4 h-14 w-full rounded-2xl bg-asphalt text-base font-black text-white active:scale-[0.99] disabled:bg-gray-400"
           >
-            Importar dados
+            {isBusy ? 'Processando...' : 'Importar dados'}
           </button>
         </div>
 
@@ -153,11 +185,10 @@ export function BackupPage() {
             disabled={isBusy}
             className="mt-4 h-14 w-full rounded-2xl bg-red-600 text-base font-black text-white active:scale-[0.99] disabled:bg-gray-400"
           >
-            Limpar todos os dados
+            {isBusy ? 'Processando...' : 'Limpar todos os dados'}
           </button>
         </div>
       </div>
     </section>
   );
 }
-

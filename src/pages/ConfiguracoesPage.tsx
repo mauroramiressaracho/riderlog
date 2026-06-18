@@ -1,4 +1,5 @@
 ﻿import { type FormEvent, useEffect, useMemo, useState } from 'react';
+import { useAppFeedback } from '../components/AppFeedback';
 import { FormField } from '../components/FormField';
 import { PageHeader } from '../components/PageHeader';
 import { configuracoesRepository, useConfiguracoes, type Configuracoes, type TemaConfiguracao } from '../db';
@@ -30,9 +31,11 @@ function settingsToForm(settings?: Configuracoes): SettingsForm {
 
 export function ConfiguracoesPage() {
   const { data: configuracoes } = useConfiguracoes();
+  const { showToast } = useAppFeedback();
   const settings = useMemo(() => configuracoes[0], [configuracoes]);
   const [form, setForm] = useState<SettingsForm>(defaultSettings);
   const [feedback, setFeedback] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     setForm(settingsToForm(settings));
@@ -49,6 +52,14 @@ export function ConfiguracoesPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (isSaving) return;
+
+    if (toNumber(form.margemSegurancaAutonomia) < 0) {
+      showToast('Margem de segurança não pode ser negativa.', 'warning');
+      return;
+    }
+
+    setIsSaving(true);
 
     const payload = {
       tema: form.tema,
@@ -56,14 +67,21 @@ export function ConfiguracoesPage() {
       margemSegurancaAutonomia: toNumber(form.margemSegurancaAutonomia),
     };
 
-    if (settings?.id) {
-      await configuracoesRepository.update(settings.id, payload);
-    } else {
-      await configuracoesRepository.create(payload);
-    }
+    try {
+      if (settings?.id) {
+        await configuracoesRepository.update(settings.id, payload);
+      } else {
+        await configuracoesRepository.create(payload);
+      }
 
-    setFeedback('Configurações salvas.');
-    window.setTimeout(() => setFeedback(''), 1600);
+      setFeedback('Configurações salvas.');
+      showToast('Configurações salvas com sucesso.', 'success');
+      window.setTimeout(() => setFeedback(''), 1600);
+    } catch {
+      showToast('Não foi possível salvar as configurações.', 'error');
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -124,9 +142,10 @@ export function ConfiguracoesPage() {
 
         <button
           type="submit"
+          disabled={isSaving}
           className="h-14 w-full rounded-2xl bg-gradient-to-br from-ember to-flame text-base font-black text-white shadow-glow active:scale-[0.99]"
         >
-          Salvar configurações
+          {isSaving ? 'Salvando...' : 'Salvar configurações'}
         </button>
       </form>
 
@@ -142,4 +161,3 @@ export function ConfiguracoesPage() {
     </section>
   );
 }
-

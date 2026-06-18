@@ -1,4 +1,5 @@
 ﻿import { type FormEvent, useMemo, useState } from 'react';
+import { useAppFeedback } from '../components/AppFeedback';
 import { FormField } from '../components/FormField';
 import { PageHeader } from '../components/PageHeader';
 import { viagensRepository, useViagens, type Viagem } from '../db';
@@ -89,6 +90,7 @@ function tripToForm(viagem: Viagem): TripHistoryFormState {
 
 export function HistoricoViagensPage() {
   const { data: viagens, isLoading } = useViagens();
+  const { confirm, showToast } = useAppFeedback();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTrip, setEditingTrip] = useState<Viagem>();
   const [form, setForm] = useState<TripHistoryFormState>(emptyForm);
@@ -124,6 +126,33 @@ export function HistoricoViagensPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (saveStatus === 'saving') return;
+
+    if (!form.data) {
+      showToast('Informe a data da viagem.', 'warning');
+      return;
+    }
+
+    if (!form.origem.trim()) {
+      showToast('Informe a origem da viagem.', 'warning');
+      return;
+    }
+
+    if (!form.destino.trim()) {
+      showToast('Informe o destino da viagem.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.kmTotal) <= 0) {
+      showToast('Km total da viagem precisa ser maior que zero.', 'warning');
+      return;
+    }
+
+    if (toNumber(form.gasto) < 0) {
+      showToast('Gasto da viagem não pode ser negativo.', 'warning');
+      return;
+    }
+
     setSaveStatus('saving');
 
     const payload = {
@@ -147,9 +176,11 @@ export function HistoricoViagensPage() {
       }
 
       setSaveStatus('saved');
+      showToast(editingTrip ? 'Viagem atualizada com sucesso.' : 'Viagem registrada com sucesso.', 'success');
       setTimeout(() => closeForm(), 650);
     } catch {
       setSaveStatus('error');
+      showToast('Erro ao salvar viagem.', 'error');
     }
   }
 
@@ -158,13 +189,23 @@ export function HistoricoViagensPage() {
       return;
     }
 
-    const confirmed = window.confirm('Excluir esta viagem do diário? Esta ação não pode ser desfeita.');
+    const confirmed = await confirm({
+      title: 'Excluir viagem',
+      message: 'Tem certeza que deseja excluir este registro?',
+      confirmLabel: 'Excluir',
+      danger: true,
+    });
 
     if (!confirmed) {
       return;
     }
 
-    await viagensRepository.remove(viagem.id);
+    try {
+      await viagensRepository.remove(viagem.id);
+      showToast('Viagem excluída.', 'success');
+    } catch {
+      showToast('Não foi possível excluir a viagem.', 'error');
+    }
   }
 
   return (
@@ -438,4 +479,3 @@ export function HistoricoViagensPage() {
     </section>
   );
 }
-
